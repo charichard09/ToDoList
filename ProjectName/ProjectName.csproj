@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+</Project>
+
+<!-- .csproj should only include an OutputType if you have a user interface consisting of a Program.cs file with a Main method. When you include an OutputType before you have a user interface, attempting to compile your project to test your classes will throw an error. -->
