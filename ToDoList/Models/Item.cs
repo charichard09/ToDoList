@@ -7,12 +7,14 @@ namespace ToDoList.Models
     public string Description { get; set; }
     // Declare a static List<Item> _instances variable
     private static List<Item> _instances = new List<Item> {};
+    public int Id { get; }
 
     public Item(string description)
     {
       Description = description;
       // Add created Item object to static _instances whenever Item is instantiated
       _instances.Add(this);
+      Id = _instances.Count;
     }
 
     // Add a static Getter function to get _instances 
@@ -25,6 +27,11 @@ namespace ToDoList.Models
     public static void ClearAll()
     {
       _instances.Clear();
+    }
+
+    public static Item Find(int searchId)
+    {
+      return _instances[searchId-1];
     }
   }
 }

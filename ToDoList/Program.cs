@@ -1,13 +1,37 @@
 using System;
 using System.Collections.Generic;
 using ToDoList.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ToDoList
 {
   public class Program
   {
-    public static void Main()
+    public static void Main(string[] args)
     {
+      #region Create Web App
+      WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+      builder.Services.AddControllersWithViews();
+
+      WebApplication app = builder.Build();
+
+      app.UseHttpsRedirection();
+
+      app.UseStaticFiles();
+
+      app.UseRouting();
+
+      app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+      );
+
+      app.Run();
+      #endregion
+      
+      #region ToDoList business logic Week8
       Console.WriteLine("To Do List");
       Console.WriteLine("--------------");
       bool finished = false;
@@ -47,7 +71,10 @@ namespace ToDoList
           }
         }
       }
+      #endregion
     }
+
+    #region IsFinished
     private static bool IsFinished()
     {
       Console.WriteLine("Would you like to add another item or view your list (y/n)");
@@ -61,5 +88,6 @@ namespace ToDoList
         return true;
       }
     }
+    #endregion
   }
 }
