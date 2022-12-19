@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToDoList.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToDoList
 {
@@ -15,8 +16,16 @@ namespace ToDoList
 
       builder.Services.AddControllersWithViews();
 
+      builder.Services.AddDbContext<ToDoListContext>(
+        dbContextOptions => dbContextOptions.UseMySql(
+          builder.Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]
+          )
+        )
+      );
+
       WebApplication app = builder.Build();
 
+      // app.UseDeveloperExceptionPage();
       app.UseHttpsRedirection();
 
       app.UseStaticFiles();
