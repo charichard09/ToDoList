@@ -37,7 +37,11 @@ public class CategoriesController : Controller
 
   public ActionResult Details(int id)
   {
-    Category thisCategory = _db.Categories.Include(category => category.Items).FirstOrDefault(category => category.CategoryId == id);
+    Category thisCategory = _db.Categories
+      .Include(category => category.Items)
+      .ThenInclude(item => item.JoinEntities)
+      .ThenInclude(join => join.Tag)
+      .FirstOrDefault(category => category.CategoryId == id);
     return View(thisCategory);
   }
 

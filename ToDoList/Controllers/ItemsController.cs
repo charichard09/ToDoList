@@ -43,7 +43,11 @@ public class ItemsController : Controller
 
   public ActionResult Details(int id)
   {
-    Item thisItem = _db.Items.Include(item => item.Category).FirstOrDefault(item => item.ItemId == id);
+    Item thisItem = _db.Items
+      .Include(item => item.Category)
+      .Include(join => join.JoinEntities)
+      .ThenInclude(join => join.Tag)
+      .FirstOrDefault(item => item.ItemId == id);
     return View(thisItem);
   }
 
@@ -73,6 +77,36 @@ public class ItemsController : Controller
     {
       Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
       _db.Items.Remove(thisItem);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    public ActionResult AddTag(int id)
+    {
+      Item thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      ViewBag.TagId = new SelectList(_db.Tags, "TagId", "Title");
+      return View(thisItem);
+    }
+
+    [HttpPost]
+    public ActionResult AddTag(Item item, int tagId)
+    {
+      #nullable enable
+      ItemTag? joinEntity =_db.ItemTags.FirstOrDefault(join => (join.TagId == tagId && join.ItemId == item.ItemId));
+      #nullable disable
+      if (joinEntity == null && tagId != 0)
+      {
+        _db.ItemTags.Add(new ItemTag() { TagId = tagId, ItemId = item.ItemId });
+        _db.SaveChanges();
+      }
+      return RedirectToAction("Details", new { id = item.ItemId});
+    }
+
+    [HttpPost]
+    public ActionResult DeleteJoin(int joinId)
+    {
+      ItemTag joinEntry = _db.ItemTags.FirstOrDefault(entry => entry.ItemTagId == joinId);
+      _db.ItemTags.Remove(joinEntry);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
