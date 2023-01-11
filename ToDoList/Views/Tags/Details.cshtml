@@ -24,6 +24,7 @@ else
       </li>
       @using (Html.BeginForm("DeleteJoin", "Tags"))
       {
+        @* does this work? should it be Hidden("joinId", join.ItemTagId) *@
         @Html.HiddenFor(model => join.ItemId)
         <input type="submit" value="Delete" />
       }

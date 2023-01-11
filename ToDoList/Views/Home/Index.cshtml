@@ -12,27 +12,26 @@
 {
   <p>No categories have been added yet!</p>
 } 
-else
-{
-  <ul>
-    @foreach (Category cat in @Model["categories"])
-    {
-      <li>
-        @Html.ActionLink(@cat.Name, "Details", "Categories", new { id = @cat.CategoryId })
-      </li>
-    }
-  </ul>
-}
 
-<h4>Items</h4>
-@if (Model["items"].Length == 0)
+<ul>
+  @foreach (Category cat in @Model["categories"])
+  {
+    <li>
+      @Html.ActionLink(@cat.Name, "Details", "Categories", new { id = @cat.CategoryId })
+    </li>
+  }
+</ul>
+
+@if (User.Identity.IsAuthenticated)
 {
-  <p>No items have been added yet!</p>
-} 
-else
-{
+  <h4>Items for @User.Identity.Name</h4>
+  @if (Model["items"].Length == 0)
+  {
+    <p>No items have been added yet!</p>
+  } 
+
   <ul>
-    @foreach (Item item in @Model["items"])
+    @foreach (Item item in Model["items"])
     {
       <li>
         @Html.ActionLink(@item.Description, "Details", "Items", new { id = @item.ItemId })
@@ -40,9 +39,15 @@ else
     }
   </ul>
 }
+else
+{
+  <h4>Items</h4>
+  <p>Please @Html.ActionLink("log in", "LogIn", "Acount") to view or manage your items.</p>
+}
 
 <hr />
 
 <p>@Html.ActionLink("See all categories", "Index", "Categories")</p>
 <p>@Html.ActionLink("See all items", "Index", "Items")</p>
 <p>@Html.ActionLink("See all tags", "Index", "Tags")</p>
+<p>@Html.ActionLink("Create or manage an account", "Index", "Account")</p>
